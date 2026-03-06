@@ -329,5 +329,7 @@ def load_data(access_token=None, force_seed=False):
 
     print("📦 Loading seed data from Meta Ad Library patterns...")
     df = generate_seed_dataframe()
+    import os
+    os.makedirs(os.path.dirname(csv_path), exist_ok=True)
     df.to_csv(csv_path, index=False)
     return df
