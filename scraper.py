@@ -1,52 +1,41 @@
-import os
 import pandas as pd
 
-# Brands list
-BRANDS = {
-    "Man Matters": {"category": "Men's Wellness"},
-    "Traya Health": {"category": "Men's Wellness"},
-    "Bombay Shaving Co": {"category": "Men's Wellness"},
-    "Beardo": {"category": "Men's Wellness"},
-    "The Man Company": {"category": "Men's Wellness"},
-    "Hims": {"category": "Men's Wellness"},
-    "Bebodywise": {"category": "Women's Wellness"},
-    "Gynoveda": {"category": "Women's Wellness"},
-    "andMe": {"category": "Women's Wellness"},
-    "Nua Woman": {"category": "Women's Wellness"},
-    "Carmesi": {"category": "Women's Wellness"},
-    "Sirona": {"category": "Women's Wellness"},
-    "Mamaearth": {"category": "Baby Care"},
-    "The Moms Co": {"category": "Baby Care"},
-    "Little Joys": {"category": "Baby Care"},
-}
 
-def load_data(access_token=None):
+def load_data():
 
     data = [
         {
-            "brand": "Man Matters",
-            "category": "Men's Wellness",
-            "ad_text": "Hair fall solution for men",
-            "theme": "problem_solution",
-            "cta": "Shop Now",
-            "platform": "Facebook",
-            "date": "2025-01-01"
+            "brand": "Traya",
+            "category": "Men Wellness",
+            "format": "Video",
+            "theme": "hair_loss",
+            "ad_text": "Stop hair loss in 90 days with doctor backed treatment",
+            "days_running": 120
         },
         {
-            "brand": "Traya Health",
-            "category": "Men's Wellness",
-            "ad_text": "Personalized hair treatment",
-            "theme": "testimonial",
-            "cta": "Learn More",
-            "platform": "Instagram",
-            "date": "2025-01-02"
+            "brand": "Be Bodywise",
+            "category": "Women Wellness",
+            "format": "Video",
+            "theme": "hormonal_health",
+            "ad_text": "Hormonal acne treatment by dermatologists",
+            "days_running": 95
+        },
+        {
+            "brand": "The Derma Co",
+            "category": "Skin Care",
+            "format": "Carousel",
+            "theme": "acne",
+            "ad_text": "Salicylic acid for acne free skin",
+            "days_running": 60
+        },
+        {
+            "brand": "Mamaearth",
+            "category": "Baby Care",
+            "format": "Image",
+            "theme": "parenting",
+            "ad_text": "Safe products for your baby",
+            "days_running": 150
         }
     ]
 
-    df = pd.DataFrame(data)
-
-    csv_path = os.path.join(os.path.dirname(__file__), "ads_data.csv")
-
-    df.to_csv(csv_path, index=False)
-
-    return df
+    return pd.DataFrame(data)
