@@ -22,7 +22,26 @@ BRANDS = {
 
 def load_data(access_token=None):
 
-    data = []
+    data = [
+        {
+            "brand": "Man Matters",
+            "category": "Men's Wellness",
+            "ad_text": "Hair fall solution for men",
+            "theme": "problem_solution",
+            "cta": "Shop Now",
+            "platform": "Facebook",
+            "date": "2025-01-01"
+        },
+        {
+            "brand": "Traya Health",
+            "category": "Men's Wellness",
+            "ad_text": "Personalized hair treatment",
+            "theme": "testimonial",
+            "cta": "Learn More",
+            "platform": "Instagram",
+            "date": "2025-01-02"
+        }
+    ]
 
     df = pd.DataFrame(data)
 
