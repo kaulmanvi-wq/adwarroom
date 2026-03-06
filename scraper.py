@@ -297,17 +297,18 @@ def parse_meta_response(brand, category, raw_ads):
     return rows
 
 
+
 def load_data(access_token=None):
 
     data = []
 
-   df = pd.DataFrame(data)
+df = pd.DataFrame(data)
 
-csv_path = os.path.join(os.path.dirname(__file__), "ads_data.csv")
+    csv_path = os.path.join(os.path.dirname(__file__), "ads_data.csv")
 
 df.to_csv(csv_path, index=False)
 
-return df
+    return df
 
     if not force_seed and access_token and access_token.strip():
         print("🔄 Fetching live data from Meta Ad Library...")
