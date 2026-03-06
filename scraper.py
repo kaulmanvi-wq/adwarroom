@@ -1,19 +1,14 @@
 """
-import os
-import pandas as pd
-import requests
 scraper.py — Meta Ad Library Data Collector
 Fetches real ads from Meta Ad Library API with realistic seed data fallback.
 """
 
+import os
 import requests
 import pandas as pd
 import random
 from datetime import datetime, timedelta
-import os
-
 csv_path = os.path.join(os.path.dirname(__file__), "ads_data.csv")
-df.to_csv(csv_path, index=False)
 
 # ─────────────────────────────────────────────
 # BRAND CONFIGURATION — 15 Competitors
