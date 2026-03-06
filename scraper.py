@@ -1,141 +1,98 @@
 """
 scraper.py
-Fetch ads from Meta Ad Library for tracked competitors
+Seed competitor ad dataset generator
 """
 
-import requests
 import pandas as pd
-from datetime import datetime
+import random
 
-# Competitors
 BRANDS = [
-    "Traya",
-    "Man Matters",
-    "Be Bodywise",
-    "Gynoveda",
-    "Mamaearth",
-    "The Moms Co",
-    "Sirona",
-    "Carmesi",
-    "Bombay Shaving Company",
-    "Beardo"
+    {"brand": "Traya", "category": "Men's Wellness"},
+    {"brand": "Man Matters", "category": "Men's Wellness"},
+    {"brand": "Be Bodywise", "category": "Women's Wellness"},
+    {"brand": "Gynoveda", "category": "Women's Wellness"},
+    {"brand": "Mamaearth", "category": "Baby Care"},
+    {"brand": "The Moms Co", "category": "Baby Care"},
+    {"brand": "Sirona", "category": "Women's Wellness"},
+    {"brand": "Carmesi", "category": "Women's Wellness"},
+    {"brand": "Bombay Shaving Company", "category": "Men's Wellness"},
+    {"brand": "Beardo", "category": "Men's Wellness"}
 ]
 
-META_URL = "https://graph.facebook.com/v18.0/ads_archive"
+FORMATS = [
+    "Video",
+    "Carousel",
+    "Static Image"
+]
 
-def get_ads_for_brand(brand, token):
+THEMES = [
+    "hair_loss",
+    "hormonal_health",
+    "testosterone",
+    "acne_treatment",
+    "doctor_authority",
+    "ugc_testimonial",
+    "discount_offer",
+    "emotional_story",
+    "stress_sleep"
+]
 
-    params = {
-        "access_token": token,
-        "search_terms": brand,
-        "ad_reached_countries": "IN",
-        "ad_type": "ALL",
-        "fields": "ad_creative_body,ad_creative_link_caption,ad_delivery_start_time,ad_delivery_stop_time,page_name,publisher_platforms",
-        "limit": 50
-    }
+PLATFORMS = [
+    "Facebook",
+    "Instagram",
+    "Facebook, Instagram"
+]
 
-    r = requests.get(META_URL, params=params)
-    data = r.json()
-
-    ads = []
-
-    for ad in data.get("data", []):
-
-        start = ad.get("ad_delivery_start_time")
-
-        if start:
-            start_date = datetime.fromisoformat(start.replace("Z", ""))
-            days_running = (datetime.now() - start_date).days
-        else:
-            days_running = 0
-
-        text = ad.get("ad_creative_body", "")
-
-        ads.append({
-            "brand": brand,
-            "category": "Wellness",
-            "format": detect_format(ad),
-            "theme": detect_theme(text),
-            "ad_text": text,
-            "days_running": days_running,
-            "platform": ",".join(ad.get("publisher_platforms", [])),
-            "is_active": "Yes",
-            "url": "https://www.facebook.com/ads/library/"
-        })
-
-    return ads
+AD_TEXT_SAMPLES = [
+    "Still struggling with hair fall? Doctors recommend this routine.",
+    "90 day transformation using natural ingredients.",
+    "Real users share their hair regrowth journey.",
+    "Stop hormonal acne naturally.",
+    "Doctors reveal the real cause of hair loss.",
+    "Flat 30% off this week only.",
+    "Sleep better and reduce stress naturally.",
+    "Parents trust this baby care routine.",
+    "Ayurvedic formula backed by research.",
+    "Thousands of happy customers already switched."
+]
 
 
-def detect_format(ad):
+def generate_ads():
 
-    platforms = ad.get("publisher_platforms", [])
+    rows = []
 
-    if "instagram" in platforms or "facebook" in platforms:
-        return "Video"
+    for b in BRANDS:
 
-    return "Static Image"
+        brand = b["brand"]
+        category = b["category"]
 
+        num_ads = random.randint(20,40)
 
-def detect_theme(text):
+        for i in range(num_ads):
 
-    text = text.lower()
+            ad_text = random.choice(AD_TEXT_SAMPLES)
 
-    if "hair" in text or "hairfall" in text:
-        return "hair_loss"
+            row = {
+                "brand": brand,
+                "category": category,
+                "format": random.choice(FORMATS),
+                "theme": random.choice(THEMES),
+                "platform": random.choice(PLATFORMS),
+                "days_running": random.randint(5,120),
+                "is_active": random.choice(["Yes","No"]),
+                "ad_text": ad_text,
+                "url": "https://facebook.com/ads/library"
+            }
 
-    if "pcos" in text or "hormone" in text:
-        return "hormonal_health"
+            rows.append(row)
 
-    if "doctor" in text:
-        return "doctor_authority"
+    df = pd.DataFrame(rows)
 
-    if "discount" in text or "offer" in text:
-        return "discount_offer"
-
-    if "sleep" in text or "stress" in text:
-        return "stress_sleep"
-
-    return "ugc_testimonial"
+    return df
 
 
 def load_data(access_token=None):
 
-    # If no token → return demo data
-    if not access_token:
-
-        data = []
-
-        for brand in BRANDS:
-
-            data.append({
-                "brand": brand,
-                "category": "Wellness",
-                "format": "Video",
-                "theme": "hair_loss",
-                "ad_text": f"{brand} solution for hair fall",
-                "days_running": 90,
-                "platform": "Facebook,Instagram",
-                "is_active": "Yes",
-                "url": "https://facebook.com"
-            })
-
-        return pd.DataFrame(data)
-
-    # Fetch real ads
-    all_ads = []
-
-    for brand in BRANDS:
-
-        try:
-            ads = get_ads_for_brand(brand, access_token)
-            all_ads.extend(ads)
-
-        except Exception as e:
-            print("Error fetching", brand, e)
-
-    df = pd.DataFrame(all_ads)
-
-    if len(df) == 0:
-        return pd.DataFrame()
+    df = generate_ads()
 
     return df
